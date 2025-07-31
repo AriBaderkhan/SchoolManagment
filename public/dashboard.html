@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Page</title>
+    <link rel="stylesheet" href="./style.css">
+    <style>
+        .center-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+            width: 100%;
+            margin: 0;
+        }
+
+        p {
+            font-size: 70px;
+        }
+    </style>
+</head>
+
+<body>
+    <ul>
+        <li><a class="active" href="./dashboard.html">Home</a></li>
+        <li id="nav-login"><a href="./login.html">Login</a></li>
+        <li id="nav-register"><a href="./register.html">Register</a></li>
+        <li><a href="#" id="logoutBtn">Logout</a></li>
+    </ul>
+    <div class="center-container">
+        <p id="text"></p>
+    </div>
+    <script>
+        const text = document.getElementById('text')
+        const token = localStorage.getItem("token");
+
+        async function fetchDashboard() {
+            try {
+                const res = await fetch('/dashboard', {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    const data = await res.text();
+                    text.textContent = data;
+
+                } else {
+                    text.textContent = "Unauthorized. Please log in.";
+                    window.location.href = "./login.html";
+                }
+
+            } catch (error) {
+                console.log("Failed to fetch dashboard:", error);
+            }
+        }
+
+        fetchDashboard();
+
+        document.getElementById('logoutBtn').addEventListener('click', function (e) {
+            e.preventDefault();
+            localStorage.clear();
+            window.location.href = "./login.html";
+        });
+    </script>
+</body>
+
+</html>

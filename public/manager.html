@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Manger Page</title>
+        <link rel="stylesheet" href="./style.css">
+        <style>
+        .center-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+            width: 100%;
+            margin: 0;
+        }
+
+        p {
+            font-size: 70px;
+        }
+    </style>
+    </head>
+
+    <body>
+        <ul>
+            <li><a class="active" href="./dashboard.html">Home</a></li>
+            <li><a href="./login.html">Login</a></li>
+            <li><a href="./register.html">Register</a></li>
+            <li><a href="#" id="logoutBtn">Logout</a></li>
+        </ul>
+        <div class="center-container">
+            <p id="text"></p>
+        </div>
+        <script>
+        async function fetchMangerData() {
+            const token = localStorage.getItem("token");
+
+            try {
+                const res = await fetch('/manger', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    text.textContent = `Access denied: ${errorText}`;
+                    return;
+                }
+
+                const data = await res.text();
+                text.textContent += ` | ${data}`;
+            } catch (error) {
+                text.textContent = "Server Error";
+                console.log(error);
+            }
+        }
+
+        fetchMangerData();
+        document.getElementById('logoutBtn').addEventListener('click', function (e) {
+    e.preventDefault();
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    window.location.href = "./login.html";
+});
+
+    </script>
+    </body>
+
+</html>

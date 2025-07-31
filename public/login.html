@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <ul>
+        <li><a href="./dashboard.html">Home</a></li>
+        <li><a class="active" id="nav-login" href="./login.html">Login</a></li>
+        <li><a href="./register.html">Register</a></li>
+        <li><a href="#" id="logoutBtn">Logout</a></li>
+    </ul>
+
+    <form action="/action_page.php" style="border:1px solid #ccc">
+        <div class="container">
+            <h1>Log in</h1>
+            <hr>
+
+            <label for="email"><b>Email</b></label>
+            <input type="text" id="email" placeholder="Enter Email" name="email" required>
+
+            <label for="psw"><b>Password</b></label>
+            <input type="password" id="password" placeholder="Enter Password" name="psw" required>
+
+
+            <p>Register ? <a href="./register.html" style="color:dodgerblue">register here</a>.</p>
+
+            <div class="clearfix">
+                <button type="submit" id="btnLogin" class="signupbtn">Log in</button>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        const btnLogin = document.getElementById('btnLogin');
+        btnLogin.addEventListener('click', async (e) => {
+            e.preventDefault();
+            loginAUser()
+        })
+        async function loginAUser() {
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            const res = await fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
+            });
+            const data = await res.json();
+            alert(data.message);
+            localStorage.setItem('token', data.token)
+            localStorage.setItem('username', data.username)
+            localStorage.setItem('role', data.role)
+
+            window.location.href = './dashboard.html'
+
+        }
+        const logoutBtn = document.getElementById('logoutBtn');
+        logoutBtn.addEventListener('click',(e)=>{
+            e.preventDefault();
+            localStorage.clear();
+            window.location.href='./login.html'
+        })
+    </script>
+</body>
+</html>
