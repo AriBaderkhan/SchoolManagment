@@ -1,12 +1,15 @@
+require('dotenv').config();
+
 const express = require('express');
 const app = express();
-const authRoute = require('./routes/authRoute')
-const PORT = 2999;
+const authRoute = require('./routes/authRoute');
+
+const PORT = process.env.PORT || 2999;
 
 
-app.use(express.json())
-app.use(express.static("public"))
-app.use(authRoute)
+app.use(express.json());
+app.use(express.static("public"));
+app.use(authRoute);
 
 
 
